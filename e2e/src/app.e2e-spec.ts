@@ -26,7 +26,7 @@ for (const browserType of [chromium, firefox, webkit]) {
       );
     });
 
-    it('Should display Angular Blog link', async () => {
+    it('Should open Angular Blog page in new tab or window', async () => {
       await page.goto('http://localhost:4200');
       const titleBannerContents = await page.waitForSelector(
         'app-root .content .card-container a:nth-child(3) span'
