@@ -8,6 +8,12 @@ const { SpecReporter, StacktraceOption } = require("jasmine-spec-reporter");
  * @type { import("protractor").Config }
  */
 exports.config = {
+  capabilities: {
+    chromeOptions: {
+      args: ["--headless"], //So we only display Playwright screens
+    },
+    browserName: "chrome",
+  },
   allScriptsTimeout: 11000,
   specs: ["./src/**/*.e2e-spec.ts"],
   directConnect: true,

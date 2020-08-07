@@ -1,10 +1,10 @@
-import { firefox, Browser, Page, chromium } from 'playwright';
+import { Browser, chromium, firefox, Page, webkit } from 'playwright';
 
-describe('Angular app homepage', () => {
-  let browser: Browser;
-  let page: Page;
+for (const browserType of [chromium, firefox, webkit]) {
+  describe(`(${browserType.name()}): Angular app homepage`, () => {
+    let browser: Browser;
+    let page: Page;
 
-  for (const browserType of [firefox, chromium]) {
     beforeAll(async () => {
       browser = await browserType.launch({ headless: false });
       page = await browser.newPage();
@@ -41,5 +41,5 @@ describe('Angular app homepage', () => {
     afterAll(async () => {
       await browser.close();
     });
-  }
-});
+  });
+}
