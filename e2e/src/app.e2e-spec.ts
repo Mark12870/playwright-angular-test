@@ -1,23 +1,45 @@
-import { AppPage } from './app.po';
-import { browser, logging } from 'protractor';
+import { firefox, Browser, Page, chromium } from 'playwright';
 
-describe('workspace-project App', () => {
-  let page: AppPage;
+describe('Angular app homepage', () => {
+  let browser: Browser;
+  let page: Page;
 
-  beforeEach(() => {
-    page = new AppPage();
-  });
+  for (const browserType of [firefox, chromium]) {
+    beforeAll(async () => {
+      browser = await browserType.launch({ headless: false });
+      page = await browser.newPage();
+    });
 
-  it('should display welcome message', () => {
-    page.navigateTo();
-    expect(page.getTitleText()).toEqual('playwright-angular-test app is running!');
-  });
+    it('Should display the correct page title', async () => {
+      await page.goto('http://localhost:4200');
+      expect(await page.title()).toBe('PlaywrightAngularTest');
+    });
 
-  afterEach(async () => {
-    // Assert that there are no errors emitted from the browser
-    const logs = await browser.manage().logs().get(logging.Type.BROWSER);
-    expect(logs).not.toContain(jasmine.objectContaining({
-      level: logging.Level.SEVERE,
-    } as logging.Entry));
-  });
+    it('Should display welcome message', async () => {
+      await page.goto('http://localhost:4200');
+      const titleBannerContents = await page.$eval(
+        'app-root .content .highlight-card span',
+        (el: HTMLElement) => el.innerText
+      );
+      expect(titleBannerContents).toBe(
+        'playwright-angular-test app is running!'
+      );
+    });
+
+    it('Should display Angular Blog link', async () => {
+      await page.goto('http://localhost:4200');
+      const titleBannerContents = await page.waitForSelector(
+        'app-root .content .card-container a:nth-child(3) span'
+      );
+      const [, popup] = await Promise.all([
+        titleBannerContents.click(),
+        page.waitForEvent('popup'),
+      ]);
+      expect(await popup.title()).toBe('Angular Blog');
+    });
+
+    afterAll(async () => {
+      await browser.close();
+    });
+  }
 });
