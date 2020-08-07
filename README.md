@@ -2,7 +2,7 @@
 
 Example of Playwright end-to-end testing library in Angular application.
 
-[Documentation](https://playwright.dev)
+[Documentation](https://playwright.dev),
 [GIT](https://github.com/microsoft/playwright)
 
 ## Browsers Support
